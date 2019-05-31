@@ -596,7 +596,9 @@ int System::JustifyX(FunctorParams *functorParams)
     // do not justify it if the non-justified width is less than a specified percent.
     if ((parent->GetIdx() == parent->GetParent()->GetChildCount() - 1)
         && (this->GetIdx() == parent->GetChildCount() - 1)) {
+        // The proportion of the width the last system has to take up for it to be justified.
         double minLastJust = params->m_doc->GetOptions()->m_minLastJustification.GetValue();
+        // (1/minLastJust) is the maximum ratio the last system will be scaled by.
         if ((minLastJust > 0) && (params->m_justifiableRatio > (1/minLastJust))) {
             return FUNCTOR_STOP;
         }
