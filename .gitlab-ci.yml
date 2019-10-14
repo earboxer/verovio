@@ -4,7 +4,11 @@ build:
     - docker
   script:
     - cd emscripten
-    - ./buildToolkit -H
+    - ./buildToolkit -DHP
+    - ls build
+  artifacts:
+    paths:
+      - emscripten/build/verovio-toolkit.js
   cache:
     paths:
       - emscripten/data
