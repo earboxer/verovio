@@ -1,0 +1,11 @@
+build:
+  image: trzeci/emscripten
+  tags:
+    - docker
+  script:
+    - cd emscripten
+    - ./buildToolkit -H
+  cache:
+    paths:
+      - emscripten/data
+      - emscripten/build
