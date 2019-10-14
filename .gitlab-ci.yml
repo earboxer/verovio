@@ -1,0 +1,19 @@
+build:
+  image: trzeci/emscripten
+  tags:
+    - docker
+  script:
+    - pushd emscripten
+    - ./buildToolkit -DHP
+    - ls build
+    - popd
+    - git archive $(git rev-parse HEAD) -o verovio.tar.gz
+  artifacts:
+    paths:
+      - emscripten/build/verovio-toolkit.js
+      - LICENSE.txt
+      - verovio.tar.gz
+  cache:
+    paths:
+      - emscripten/data
+      - emscripten/build
