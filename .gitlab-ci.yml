@@ -1,4 +1,4 @@
-buildJS:
+build_emscripten:
   tags:
     - docker
   image: trzeci/emscripten
@@ -18,7 +18,7 @@ buildJS:
       - emscripten/data
       - emscripten/build
 
-buildBIN:
+build_cmake:
   tags:
     - docker
   image: buildpack-deps:stable-scm
@@ -26,9 +26,16 @@ buildBIN:
     - (apt-get update || apt-get update) && apt-get install -y git cmake build-essential
   script:
     - pushd tools
-    - cmake . && make && make install/strip
+    - cmake . && make
     - popd
   artifacts:
     paths:
-      - /usr/local/bin/verovio
-      - /usr/local/share/verovio
+      - data
+      - tools/verovio
+  cache:
+    paths:
+      - tools/CMakeCache.txt
+      - tools/CMakeFiles
+      - tools/Makefile
+      - tools/cmake_install.cmake
+      - tools/install_manifest.txt
