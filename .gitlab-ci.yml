@@ -1,7 +1,7 @@
-build:
-  image: trzeci/emscripten
+buildJS:
   tags:
     - docker
+  image: trzeci/emscripten
   script:
     - pushd emscripten
     - ./buildToolkit -DHP
@@ -17,3 +17,18 @@ build:
     paths:
       - emscripten/data
       - emscripten/build
+
+buildBIN:
+  tags:
+    - docker
+  image: buildpack-deps:stable-scm
+  before_script:
+    - (apt-get update || apt-get update) && apt-get install -y git cmake build-essential
+  script:
+    - pushd tools
+    - cmake . && make && make install/strip
+    - popd
+  artifacts:
+    paths:
+      - /usr/local/bin/verovio
+      - /usr/local/share/verovio
