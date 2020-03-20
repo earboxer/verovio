@@ -51,6 +51,7 @@
 #include "octave.h"
 #include "pb.h"
 #include "pedal.h"
+#include "pgfoot.h"
 #include "pghead.h"
 #include "reh.h"
 #include "rend.h"
@@ -557,6 +558,9 @@ bool MusicXmlInput::ReadMusicXml(pugi::xml_node root)
         m_doc->m_scoreDef.AddChild(head);
     }
 
+    // Read rights into pgFoot.
+    ReadMusicXmlRights(root);
+
     std::vector<StaffGrp *> m_staffGrpStack;
     StaffGrp *staffGrp = new StaffGrp();
     m_doc->m_scoreDef.AddChild(staffGrp);
@@ -816,6 +820,20 @@ void MusicXmlInput::ReadMusicXmlTitle(pugi::xml_node root)
         now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec);
     app.append_attribute("isodate").set_value(dateStr.c_str());
     app.append_attribute("version").set_value(GetVersion().c_str());
+}
+
+void MusicXmlInput::ReadMusicXmlRights(pugi::xml_node root)
+{
+    PgFoot *pgFoot = new PgFoot();
+
+    pugi::xpath_node_set rightses = root.select_nodes("/score-partwise/identification/rights");
+    for (pugi::xpath_node_set::const_iterator it = rightses.begin(); it != rightses.end(); ++it) {
+        pugi::xpath_node rights = *it;
+        Text *text = new Text();
+        text->SetText(UTF8to16(rights.node().text().as_string()));
+        pgFoot->AddChild(text);
+    }
+    m_doc->m_scoreDef.AddChild(pgFoot);
 }
 
 int MusicXmlInput::ReadMusicXmlPartAttributesAsStaffDef(pugi::xml_node node, StaffGrp *staffGrp, int staffOffset)

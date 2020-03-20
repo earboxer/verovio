@@ -165,6 +165,8 @@ private:
      */
     void ReadMusicXmlTitle(pugi::xml_node title);
 
+    void ReadMusicXmlRights(pugi::xml_node root);
+
     /*
      * @name Top level methods for reading MusicXml part and measure elements.
      */
