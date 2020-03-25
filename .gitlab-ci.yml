@@ -1,7 +1,7 @@
 build_emscripten:
   tags:
     - docker
-  image: trzeci/emscripten
+  image: trzeci/emscripten:1.39.10-upstream
   script:
     - pushd emscripten
     - ./buildToolkit -DHP
@@ -15,7 +15,7 @@ build_emscripten:
       - LICENSE.txt
       - verovio.tar.gz
   cache:
-    key: '2020-03-25'
+    key: '1.39.10'
     paths:
       - emscripten/data
       - emscripten/build
