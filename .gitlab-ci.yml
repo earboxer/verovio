@@ -8,12 +8,14 @@ build_emscripten:
     - ls build
     - popd
     - git archive $(git rev-parse HEAD) -o verovio.tar.gz
+    - ls emscripten/build/verovio-toolkit.js
   artifacts:
     paths:
       - emscripten/build/verovio-toolkit.js
       - LICENSE.txt
       - verovio.tar.gz
   cache:
+    key: '2020-03-25'
     paths:
       - emscripten/data
       - emscripten/build
@@ -28,6 +30,7 @@ build_cmake:
     - pushd tools
     - cmake ../cmake && make
     - popd
+    - ls tools/verovio
   artifacts:
     paths:
       - data
