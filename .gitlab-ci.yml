@@ -1,4 +1,5 @@
 build_emscripten:
+  stage: build
   tags:
     - docker
   image: trzeci/emscripten:1.39.10-upstream
@@ -21,6 +22,7 @@ build_emscripten:
       - emscripten/build
 
 build_cmake:
+  stage: build
   tags:
     - docker
   image: buildpack-deps:stable-scm
@@ -42,3 +44,34 @@ build_cmake:
       - tools/Makefile
       - tools/cmake_install.cmake
       - tools/install_manifest.txt
+
+build_c_library_musl:
+  stage: build
+  tags:
+    - docker
+  image: alpine:latest
+  before_script:
+    - apk add git cmake make gcc g++ musl-dev libc6-compat
+  script:
+    - cd tools
+    - cmake -DBUILD_AS_LIBRARY=ON ../cmake
+    - make
+  artifacts:
+    paths:
+      - data
+      - tools/libverovio.so
+      - tools/c_wrapper.h
+
+test_c_library_musl:
+  stage: test
+  dependencies:
+    - build_c_library_musl
+  tags:
+    - docker
+  image: alpine:latest
+  before_script:
+    - apk add gcc musl-dev libc6-compat
+  script:
+    - cd bindings/c
+    - gcc main.c -o main -L../../tools -lverovio
+    - LD_LIBRARY_PATH=../../tools ./main
