@@ -45,11 +45,11 @@ build_cmake:
       - tools/cmake_install.cmake
       - tools/install_manifest.txt
 
-build_c_library_musl:
+build_c_library_musl_old:
   stage: build
   tags:
     - docker
-  image: alpine:latest
+  image: alpine:3.9
   before_script:
     - apk add git cmake make gcc g++ musl-dev libc6-compat
   script:
@@ -65,7 +65,7 @@ build_c_library_musl:
 test_c_library_musl:
   stage: test
   dependencies:
-    - build_c_library_musl
+    - build_c_library_musl_old
   tags:
     - docker
   image: alpine:latest
